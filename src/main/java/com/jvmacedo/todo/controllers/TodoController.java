@@ -18,25 +18,25 @@ import java.util.UUID;
 public class TodoController {
   @Autowired
   public TodoService todoService;
-  @GetMapping
-  private ResponseEntity<Object> getAll(){
-    return ResponseEntity.status(HttpStatus.OK).body(todoService.getAll());
+  @GetMapping("/allByUser/{userId}")
+  private ResponseEntity<Object> getAll(@PathVariable String userId){
+    return ResponseEntity.status(HttpStatus.OK).body(todoService.getAll(userId));
   }
   @GetMapping("/{id}")
-  public ResponseEntity<Object> getById(@PathVariable UUID id){
-    Optional<Todo> todo = todoService.getById(id);
+  public ResponseEntity<Object> getById(@PathVariable String userID, @PathVariable UUID id){
+    Optional<Todo> todo = todoService.getById(userID, id);
     if(!todo.isPresent()){
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Todo not found!");
     }
     return ResponseEntity.status(HttpStatus.OK).body(todo);
   }
-  @GetMapping("/priority/{priority}")
-  public ResponseEntity<Object> getByPriority(@PathVariable Integer priority){
-    return ResponseEntity.status(HttpStatus.OK).body(todoService.getByPriority(priority));
+  @GetMapping("/priority/{userId}/{priority}")
+  public ResponseEntity<Object> getByPriority(@PathVariable String userId, @PathVariable Integer priority){
+    return ResponseEntity.status(HttpStatus.OK).body(todoService.getByPriority(userId, priority));
   }
-  @GetMapping("/status/{status}")
-  public ResponseEntity<Object> getByStatus(@PathVariable boolean status){
-    return ResponseEntity.status(HttpStatus.OK).body(todoService.getByStatus(status));
+  @GetMapping("/status/{userId}/{status}")
+  public ResponseEntity<Object> getByStatus(@PathVariable String userId, @PathVariable boolean status){
+    return ResponseEntity.status(HttpStatus.OK).body(todoService.getByStatus(userId, status));
   }
   @PostMapping
   public ResponseEntity<Object> create(@RequestBody @Valid TodoDTO todoDTO){
@@ -46,9 +46,9 @@ public class TodoController {
   public ResponseEntity<Object> update(@PathVariable UUID id, @RequestBody TodoDTO todo){
     return ResponseEntity.status(HttpStatus.OK).body(todoService.update(todo, id));
   }
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Object> delete(@PathVariable UUID id){
-    Optional<Todo> todo = todoService.getById(id);
+  @DeleteMapping("/{userId}/{id}")
+  public ResponseEntity<Object> delete(@PathVariable String userID, @PathVariable UUID id){
+    Optional<Todo> todo = todoService.getById(userID, id);
     if(!todo.isPresent()){
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Todo not found!");
     }
