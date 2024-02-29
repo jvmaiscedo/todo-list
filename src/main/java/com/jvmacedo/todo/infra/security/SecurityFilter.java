@@ -1,6 +1,7 @@
 package com.jvmacedo.todo.infra.security;
 
 import com.jvmacedo.todo.repository.UserRepository;
+import com.jvmacedo.todo.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

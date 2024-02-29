@@ -1,4 +1,4 @@
-package com.jvmacedo.todo.infra.security;
+package com.jvmacedo.todo.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
