@@ -21,6 +21,12 @@ public class TodoService {
   @Autowired
   private TodoRepository repository;
   public Todo create (TodoDTO todo){
+    boolean existe = repository.findAllByUserId(todo.userId())
+      .stream()
+      .anyMatch(t -> t.getTitle().equalsIgnoreCase(todo.title()));
+    if (existe) {
+      return null;
+    }
     Todo newTodo = new Todo(todo.userId(), todo.title(), todo.description(), todo.priority(), todo.status());
     return repository.save(newTodo);
   }

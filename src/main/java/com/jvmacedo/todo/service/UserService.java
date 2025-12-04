@@ -3,6 +3,7 @@ package com.jvmacedo.todo.service;
 import com.jvmacedo.todo.dto.AuthenticationDTO;
 import com.jvmacedo.todo.model.User;
 import com.jvmacedo.todo.repository.UserRepository;
+import com.jvmacedo.todo.validation.PasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,8 +13,13 @@ import org.springframework.stereotype.Service;
 public class UserService {
   @Autowired
   UserRepository userRepository;
+  @Autowired
+  PasswordValidator passwordValidator;
   public User create (AuthenticationDTO userDTO){
     if(userRepository.findByEmail(userDTO.email())!=null){
+      return null;
+    }
+    if (!passwordValidator.isSafe(userDTO.password())) {
       return null;
     }
     String encryptedPassword = new BCryptPasswordEncoder().encode(userDTO.password());
@@ -21,6 +27,9 @@ public class UserService {
     return userRepository.save(newUser);
   }
   public boolean updatePassword(String password, String email){
+    if (!passwordValidator.isSafe(password)) {
+      return false;
+    }
     if(userRepository.findByEmail(email)==null){
       return false;
     }
